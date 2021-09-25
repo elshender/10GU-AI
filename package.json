@@ -1,0 +1,22 @@
+{
+  "name": "10gu-ai",
+  "version": "0.0.1",
+  "description": "10gu-ai discord bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elshender/10GU-AI.git"
+  },
+  "author": "Joshn and Elshender",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elshender/10GU-AI/issues"
+  },
+  "homepage": "https://github.com/elshender/10GU-AI#readme",
+  "dependencies": {
+    "discord.js": "^13.1.0"
+  }
+}
