@@ -1,7 +1,7 @@
 {
   "name": "10gu-ai",
   "version": "0.0.1",
-  "description": "10gu-ai discord bot",
+  "description": "Kuroda Discord bot",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
