@@ -13,7 +13,7 @@
 
 ## Features
 * Music DJ. - To DO 
-* Gift a SC drink to user. - To DO 
+* Gift a SC drink to user. - in progress 
 * Guilded events Bridge. - To DO 
 * RSI Account authentication with Role. - To DO 
 * React Role one time react, channel role react. - To DO 
@@ -21,3 +21,46 @@
 * accept commands on private messages and public text channels - To DO 
 * responds as private message - global and per command option - To DO 
 
+# Technical
+
+## Details
+* Technical knowledge to setup (bash, json)
+* Built as a node.js app
+* Run it inside a docker (recommended)
+* Extend - add new commands by adding a new file
+* uses discord.js
+
+
+## Setup
+1. Make a bot app on discord and get it's token
+2. Make a discord server
+3. Invite the bot on your discord Ex: https://discordapp.com/oauth2/authorize?&client_id=111111111111&scope=bot&permissions=0  (you need to be a moderator/admin)
+
+*Note: Recommend to make a new bot and server for testing/development process.*
+
+## Tech setup
+ 1. Clone this repo
+ 2. Make a config and populate it
+```bash
+cp config.example.js config.js
+nano or vim config.js
+```
+3. Install the dependencies
+```bash
+npm install --production
+```
+4. Run the bot (see below)
+
+
+*Note: DO not run multiple instances with the same config file, you'll have a bad time.*
+
+If you have trouble with the Discord website you can follow this tutorial [https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token]
+
+### Run as local process
+
+```bash
+node index.js
+```
+
+### Run it as a Docker container
+....TODO....

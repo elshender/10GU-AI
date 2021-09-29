@@ -18,5 +18,7 @@
   "homepage": "https://github.com/elshender/10GU-AI#readme",
   "dependencies": {
     "discord.js": "^13.1.0"
-  }
+  },
+  "devDependencies": {},
+  "keywords": []
 }
