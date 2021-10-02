@@ -1,8 +1,7 @@
 {
-    //Application ID, of your bot found in the discord developer portal
 	"clientId": "",
-    // The ID of your discord server
+
 	"guildId": "",
-    /*The token of your bot, found in the discord developer portal*/
+
 	"token": ""
 }
