@@ -35,6 +35,7 @@
 1. Make a bot app on discord and get it's token
 2. Make a discord server
 3. Invite the bot on your discord Ex: https://discordapp.com/oauth2/authorize?&client_id=111111111111&scope=bot&permissions=0  (you need to be a moderator/admin)
+4. Privilieged gateway intents in discord dev portal -> enable Both (testing)
 
 *Note: Recommend to make a new bot and server for testing/development process.*
 
