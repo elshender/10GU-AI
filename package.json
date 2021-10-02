@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/elshender/10GU-AI#readme",
   "dependencies": {
+    "@discordjs/opus": "^0.5.3",
+    "discord-player": "^5.1.0",
     "discord.js": "^13.1.0"
   }
 }
