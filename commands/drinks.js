@@ -23,7 +23,7 @@ module.exports = {
 
            const exampleReply = rdmarr[Math.floor(Math.random() * rdmarr.length)];
             interaction.reply({
-              content:`${user}, has received a ${ exampleReply.text}`,
+              content:` has received a ${ exampleReply.text}`,
               embeds: [{image: {url: exampleReply.img}}],
               ephemeral: true
               });
