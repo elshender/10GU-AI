@@ -20,13 +20,15 @@ module.exports = {
               text: "drink5",
               img:  "https://i.ytimg.com/vi/g8sKB6iEyMI/maxresdefault.jpg",
             },];
+
            const exampleReply = rdmarr[Math.floor(Math.random() * rdmarr.length)];
             interaction.reply({
-               content:`Some one gave you a ${ exampleReply.text}`,
-               embeds: [{image: {url: exampleReply.img}}],
-               ephemeral: true
-               });
-            console.log(interaction);
+              content:`${user}, has received a ${ exampleReply.text}`,
+              embeds: [{image: {url: exampleReply.img}}],
+              ephemeral: true
+              });
+          const aurthor = interaction.options.get("").vlaue;
+
+            console.log(aurthor);
           },
-         }
-    
+        }
