@@ -16,20 +16,20 @@ module.exports = {
         // rdmarr is an array of objects containing images and text.
         const rdmarr = [{
               text: "Jynx Gin",
-              img:  "https://imgur.com/0gpmXP4",
+              img:  "https://i.imgur.com/0gpmXP4.png",
               About: ""
             },{
               text: "Soles Mezcal",
-              img:  "https://imgur.com/kN3NW2D",
+              img:  "https://i.imgur.com/kN3NW2D.png",
             },{
               text: "Smoltz Beer",
-              img:  "https://imgur.com/mjjOUk3",
+              img:  "https://i.imgur.com/mjjOUk3.png",
             },{
               text: "Radegast Gold Whiskey",
-              img:  "https://imgur.com/k53glZB",
+              img:  "https://i.imgur.com/k53glZB.png",
             },{
               text: "Torm's Surface Cleaner",
-              img:  "https://imgur.com/NOrXxSm",
+              img:  "https://i.imgur.com/NOrXxSm.png",
             },];
 
            // Gets random value of an object in an array.
