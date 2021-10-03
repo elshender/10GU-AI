@@ -3,7 +3,17 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
     name: 'drinks',
     description: "Give some one a drink",
+    options: [
+      {
+          name: "user",
+          type: "STRING",
+          description: "@username you want to send a drink to.",
+          required: true
+      }
+  ],
     execute(interaction, ){
+
+        // rdmarr is an array of objects containing images and text.
         const rdmarr = [{
               text: "drink1",
               img:  "https://starcitizen.tools/images/6/65/Pips-cans-3.9.1.jpg"
@@ -21,14 +31,30 @@ module.exports = {
               img:  "https://i.ytimg.com/vi/g8sKB6iEyMI/maxresdefault.jpg",
             },];
 
-           const exampleReply = rdmarr[Math.floor(Math.random() * rdmarr.length)];
-            interaction.reply({
-              content:` has received a ${ exampleReply.text}`,
-              embeds: [{image: {url: exampleReply.img}}],
-              ephemeral: true
-              });
-          const aurthor = interaction.options.get("").vlaue;
+           // Gets random value of an object in an array.
+           const rdmdrink = rdmarr[Math.floor(Math.random() * rdmarr.length)];
 
-            console.log(aurthor);
-          },
-        }
+           // Gets the value entered into the command option by the user.
+           const optionVal =interaction.options.get("user").value;
+
+           // The '@' member name provides a user ID in a string that looks like this <@!5837383904505>.
+           // This removes the special chars from that string so you just get the numbers.
+           const userID = optionVal.replace(/[@!<>]/g, "")
+
+           // Gets message author.
+           const aurthor = interaction.options.get("").vlaue;
+
+           // Sends message to the user ID.
+           interaction.guild.members.cache.get(userID).send({
+              content:`${aurthor}, sent you a bottle of ${ rdmdrink.text}`,
+              embeds: [{image: {url: rdmdrink.img}}],
+              ephemeral: true
+            })
+
+           // Reply message to the message author.
+           interaction.reply({
+              content:` A bottle of ${ rdmdrink.text} was selected.`,
+              ephemeral: true
+              }); 
+            },
+          }
