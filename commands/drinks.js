@@ -30,6 +30,39 @@ module.exports = {
             },{
               text: "Torm's Surface Cleaner",
               img:  "https://i.imgur.com/NOrXxSm.png",
+            },{
+              text: "Earth Gin",
+              img:  "https://i.imgur.com/8QPnJKD.png",
+            },{
+              text: "Uknown Banu Gin",
+              img:  "https://i.imgur.com/GXXvoqd.png",
+            },{
+              text: "Starlighters Cognac",
+              img:  "https://i.imgur.com/3zyAUp8.png",
+            },{
+              text: "Radegast Whiskey",
+              img:  "https://i.imgur.com/qs1IrW0.png",
+            },{
+              text: "Leviahan Whiskey",
+              img:  "https://i.imgur.com/d9mXAmU.png",
+            },{
+              text: "Onesin Water",
+              img:  "https://i.imgur.com/JKpLFML.png",
+            },{
+              text: "Tevarin Whiskey",
+              img:  "https://i.imgur.com/4D9hHfs.png",
+            },{
+              text: "Hippocampus",
+              img:  "https://i.imgur.com/pWE3cAn.png",
+            },{
+              text: "Chibanzaa Root Tea",
+              img:  "https://i.imgur.com/UkIO7ya.png",
+            },{
+              text: "Cathcart Rum",
+              img:  "https://i.imgur.com/WldXVNd.png",
+            },{
+              text: "Sky Whiskey",
+              img:  "https://i.imgur.com/hueZBIC.png",
             },];
 
            // Gets random value of an object in an array.
