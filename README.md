@@ -12,8 +12,8 @@
 # StarCitizen 10GU-AI - Private Discord Bot
 
 ## Features
-* Music DJ. - To DO 
-* Gift a SC drink to user. - in progress 
+* Music DJ. - In Progress ( Play : Done , Skip:soon, stop/pause:soon )
+* Gift a SC drink to user. - in progress (messaging completed: format of message in progress)
 * Guilded events Bridge. - To DO 
 * RSI Account authentication with Role. - To DO 
 * React Role one time react, channel role react. - To DO 
