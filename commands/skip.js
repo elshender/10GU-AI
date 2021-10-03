@@ -8,9 +8,11 @@ module.exports = {
 
             const queue = player.getQueue(interaction.guildId);
 
-            
+            const author = interaction.member.user;
+
             try {
                 queue.skip()
+                return interaction.reply({ content: `${author.username} skipped the track`});
             } catch {
                 return interaction.reply({ content: "Could not skip, ensure something is playing", ephemeral: true });
             }       
