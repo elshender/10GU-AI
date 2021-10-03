@@ -34,24 +34,17 @@ module.exports = {
            // Gets random value of an object in an array.
            const rdmdrink = rdmarr[Math.floor(Math.random() * rdmarr.length)];
 
-           // Gets the value entered into the command option by the user.
-           const optionVal =interaction.options.get("user").value;
-          
-
-           // The '@' member name provides a user ID in a string that looks like this <@!5837383904505>.
-           // This removes the special chars from that string so you just get the numbers.
-           const userID = optionVal.replace(/[@!<>]/g, "")
-
-           // Get message recipiet.
-           const recipient = discordClient.users.cache.get(userID);
-
-           // Get message recipiet.
            const author = interaction.member.user;
 
            console.log(author)
 
            // Sends message to the user ID.
            try {
+            const optionVal = interaction.options.get("user").value;
+            const userID = optionVal.replace(/[@!<>]/g, "")
+            const recipient = discordClient.users.cache.get(userID);
+
+
             interaction.guild.members.cache.get(userID).send({
               content:`${recipient}, ${author.username} sent you a bottle of ${ rdmdrink.text}.`,
               embeds: [{image: {url: rdmdrink.img}}],
