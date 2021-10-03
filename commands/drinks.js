@@ -11,7 +11,7 @@ module.exports = {
           required: true
       }
   ],
-    execute(interaction, ){
+    execute(interaction,discordClient ){
 
         // rdmarr is an array of objects containing images and text.
         const rdmarr = [{
@@ -36,20 +36,36 @@ module.exports = {
 
            // Gets the value entered into the command option by the user.
            const optionVal =interaction.options.get("user").value;
+          
 
            // The '@' member name provides a user ID in a string that looks like this <@!5837383904505>.
            // This removes the special chars from that string so you just get the numbers.
            const userID = optionVal.replace(/[@!<>]/g, "")
 
-           // Gets message author.
-           const aurthor = interaction.options.get("").vlaue;
+           // Get message recipiet.
+           const recipient = discordClient.users.cache.get(userID);
+
+           // Get message recipiet.
+           const author = interaction.member.user;
+
+           console.log(author)
 
            // Sends message to the user ID.
-           interaction.guild.members.cache.get(userID).send({
-              content:`${aurthor}, sent you a bottle of ${ rdmdrink.text}`,
+           try {
+            interaction.guild.members.cache.get(userID).send({
+              content:`${recipient}, ${author.username} sent you a bottle of ${ rdmdrink.text}.`,
               embeds: [{image: {url: rdmdrink.img}}],
               ephemeral: true
             })
+          }
+            catch(error){
+            // Reply message to the message author.
+              interaction.reply({
+              content:`:no_entry_sign:  Error, Not a member. :no_entry_sign:`,
+              ephemeral: true
+           });
+             console.log(error)
+           }
 
            // Reply message to the message author.
            interaction.reply({
