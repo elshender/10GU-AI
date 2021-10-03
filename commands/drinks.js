@@ -77,11 +77,31 @@ module.exports = {
             const optionVal = interaction.options.get("user").value;
             const userID = optionVal.replace(/[@!<>]/g, "")
             const recipient = discordClient.users.cache.get(userID);
-
-
-            interaction.guild.members.cache.get(userID).send({
-              content:`${recipient}, ${author.username} sent you a bottle of ${ rdmdrink.text}.`,
-              embeds: [{image: {url: rdmdrink.img}}],
+            interaction.guild.members.cache.get(userID).send(
+                { 
+                  content: `${recipient}`,
+                  embeds: [
+                  {
+                  title: "Here is a gift, enjoy !",
+                  description: `${author.username} sent you a bottle of ${ rdmdrink.text}. with compliments - The Kuro Casillero.`,
+                  color: 16312092,
+                  footer: {
+                    icon_url: "https://i.imgur.com/BaLPmjP.png",
+                    text: "The Kuro Casillero"
+                  },
+                  thumbnail: {
+                    url: "https://i.imgur.com/BaLPmjP.png"
+                  },
+                  image: {
+                    url: rdmdrink.img
+                  },
+                  author: {
+                    name: "The Kuro Casillero",
+                    url: "https://discordapp.com",
+                    icon_url: "https://i.imgur.com/BaLPmjP.png"
+                  }
+                }
+              ],
               ephemeral: true
             })
           }
@@ -91,7 +111,7 @@ module.exports = {
               content:`:no_entry_sign:  Error, Not a member. :no_entry_sign:`,
               ephemeral: true
            });
-             console.log(error)
+           console.log(error)
            }
 
            // Reply message to the message author.
