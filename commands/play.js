@@ -3,11 +3,7 @@ module.exports = {
     description: "Add a song to the queue",
     options: [
         {
-<<<<<<< HEAD
-            name: "something",
-=======
-            name: "url",
->>>>>>> 66da11eee149448915fa4cd0df579e1d70b4a9b8
+            name: "track",
             type: "STRING",
             description: "The URL of the song you want to play",
             required: true
@@ -17,11 +13,9 @@ module.exports = {
     async execute(interaction, discordClient, player){
          if (!interaction.member.voice.channelId) return await interaction.reply({ content: ":yum: You are not in a voice channel!", ephemeral: true });
          if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) return await interaction.reply({ content: ":yum: You are not in my voice channel!", ephemeral: true });
-<<<<<<< HEAD
-        const query = interaction.options.get("something").value;
-=======
-        const query = interaction.options.get("url").value;
->>>>>>> 66da11eee149448915fa4cd0df579e1d70b4a9b8
+
+        const query = interaction.options.get("track").value;
+
         const queue = player.createQueue(interaction.guild, {
           metadata: {
               channel: interaction.channel
