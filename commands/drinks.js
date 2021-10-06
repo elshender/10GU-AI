@@ -70,8 +70,6 @@ module.exports = {
 
            const author = interaction.member.user;
 
-           console.log(author)
-
            // Sends message to the user ID.
            try {
             const optionVal = interaction.options.get("user").value;
