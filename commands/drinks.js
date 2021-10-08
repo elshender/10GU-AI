@@ -84,40 +84,43 @@ module.exports = {
            });
               return; }
 
+            try{
+              
             interaction.guild.members.cache.get(recipientID).send(
-                { 
-                  content: `${recipient}`,
-                  embeds: [
-                  {
-                  title: "Here is a gift, enjoy !",
-                  description: `${author.username} sent you a bottle of ${ rdmdrink.text}. with compliments - The Kuro Casillero.`,
-                  color: 16312092,
-                  footer: {
-                    icon_url: "https://i.imgur.com/BaLPmjP.png",
-                    text: "The Kuro Casillero"
-                  },
-                  thumbnail: {
-                    url: "https://i.imgur.com/BaLPmjP.png"
-                  },
-                  image: {
-                    url: rdmdrink.img
-                  },
-                  author: {
-                    name: "The Kuro Casillero",
-                    url: "https://discordapp.com",
-                    icon_url: "https://i.imgur.com/BaLPmjP.png"
-                  }
+              { 
+                content: `${recipient}`,
+                embeds: [
+                {
+                title: "Here is a gift, enjoy !",
+                description: `${author.username} sent you a bottle of ${ rdmdrink.text}. with compliments - The Kuro Casillero.`,
+                color: 16312092,
+                footer: {
+                  icon_url: "https://i.imgur.com/BaLPmjP.png",
+                  text: "The Kuro Casillero"
+                },
+                thumbnail: {
+                  url: "https://i.imgur.com/BaLPmjP.png"
+                },
+                image: {
+                  url: rdmdrink.img
+                },
+                author: {
+                  name: "The Kuro Casillero",
+                  url: "https://discordapp.com",
+                  icon_url: "https://i.imgur.com/BaLPmjP.png"
                 }
-              ],
-              ephemeral: true
-            })
-        
-            // Reply message to the message author.
+              }
+            ],
+            ephemeral: true
+          })
+            }
+            catch{
               interaction.reply({
-              content:`:no_entry_sign:  Error, Not a member. :no_entry_sign:`,
-              ephemeral: true
-           });
-           
+                content:`:no_entry_sign:  Error, Not a member. :no_entry_sign:`,
+                ephemeral: true
+             });
+             
+            }
            
 
            // Reply message to the message author.
