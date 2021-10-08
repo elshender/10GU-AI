@@ -39,8 +39,8 @@ discordClient.login(token);
 // Listens for and executes the commands
 discordClient.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
-  //console.log(interaction);
   const calledCommand = commandList.get(interaction.commandName);
   calledCommand.execute(interaction, discordClient, player);
 });
+
 

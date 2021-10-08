@@ -6,12 +6,12 @@ module.exports = {
     options: [
       {
           name: "user",
-          type: "STRING",
-          description: "@username you want to send a drink to.",
+          type: "USER",
+          description: "username you want to send a drink to.",
           required: true
       }
   ],
-    execute(interaction,discordClient ){
+    async execute(interaction,discordClient ){
 
         // rdmarr is an array of objects containing images and text.
         const rdmarr = [{
@@ -70,12 +70,12 @@ module.exports = {
 
            const author = interaction.member.user;
 
-           // Sends message to the user ID.
+      
            try {
-            const optionVal = interaction.options.get("user").value;
-            const userID = optionVal.replace(/[@!<>]/g, "")
-            const recipient = discordClient.users.cache.get(userID);
-            interaction.guild.members.cache.get(userID).send(
+       
+            const recipientID = interaction.options.get("user").value
+            const recipient = discordClient.users.cache.get(recipientID);
+            interaction.guild.members.cache.get(recipientID).send(
                 { 
                   content: `${recipient}`,
                   embeds: [
@@ -109,7 +109,7 @@ module.exports = {
               content:`:no_entry_sign:  Error, Not a member. :no_entry_sign:`,
               ephemeral: true
            });
-           console.log(error)
+           
            }
 
            // Reply message to the message author.
