@@ -1,4 +1,5 @@
 const { MessageEmbed } = require("discord.js");
+const { clientId } = require("../config.json")
 
 module.exports = {
     name: 'drinks',
@@ -71,10 +72,18 @@ module.exports = {
            const author = interaction.member.user;
 
       
-           try {
+  
        
             const recipientID = interaction.options.get("user").value
             const recipient = discordClient.users.cache.get(recipientID);
+           
+            // Prevents bot crashing when sending a drink to itself 
+            if (recipientID === clientId){interaction.reply({
+              content:`Imbibing is a weakness of humans`,
+              ephemeral: true
+           });
+              return; }
+
             interaction.guild.members.cache.get(recipientID).send(
                 { 
                   content: `${recipient}`,
@@ -102,15 +111,14 @@ module.exports = {
               ],
               ephemeral: true
             })
-          }
-            catch(error){
+        
             // Reply message to the message author.
               interaction.reply({
               content:`:no_entry_sign:  Error, Not a member. :no_entry_sign:`,
               ephemeral: true
            });
            
-           }
+           
 
            // Reply message to the message author.
            interaction.reply({

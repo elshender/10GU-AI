@@ -9,6 +9,7 @@ const player = new Player(discordClient);
 
 let commandList = new Map();
 
+
 // List of file in the commands directory 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
