@@ -10,8 +10,11 @@ module.exports = {
         if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) 
         return interaction.reply({ content: "You are not in my voice channel!",  ephemeral: true });
 
+        const author = interaction.member.user;
+
         //Remove the current track from the queue
         stream.shift();
+        
 
         try {
             //If no tracks remain in the queue diconnect the bot from the voice channel
@@ -31,8 +34,6 @@ module.exports = {
         })
 
         player.play(resource);
-
-        const author = interaction.member.user;
 
         return interaction.reply({ content: `${author.username} skipped the track`});
 
