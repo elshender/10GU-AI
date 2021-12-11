@@ -1,6 +1,10 @@
+const { createAudioResource, joinVoiceChannel } = require('@discordjs/voice');
+const { guildId } = require('../config.json');
+const play = require('play-dl');
+
 module.exports = {
     name: 'play',
-    description: "Add a song to the queue",
+    description: "An example command",
     options: [
         {
             name: "track",
@@ -9,73 +13,61 @@ module.exports = {
             required: true
         }
     ],
+    async execute(interaction, client, player, stream){
 
-    async execute(interaction, discordClient, player){
-         if (!interaction.member.voice.channelId) return await interaction.reply(
-             {
-                  content: "This Guy...", ephemeral: true ,
-                  embeds: [
-                    {
-                      "type": "rich",
-                      "title": `:warning:  :headphones: You are not in a voice channel ! :headphones:  :warning:`,
-                      "description": `Join a voice channel and try the /play command again.`,
-                      "color": 0xff3f3f
-                    }
-                  ]
-             }
-             );
-         if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) return await interaction.reply({ content: ":yum: You are not in my voice channel!", ephemeral: true });
+        //Connect the bot to the voice channel
+        const connection = joinVoiceChannel({
+            channelId : interaction.member.voice.channel.id,
+            guildId : guildId,
+            adapterCreator: interaction.guild.voiceAdapterCreator
+        })
 
-        const query = interaction.options.get("track").value;
-
-        const queue = player.createQueue(interaction.guild, {
-          metadata: {
-              channel: interaction.channel
-          }
-      });
-      
-      // verify voice chat connection
-      try {
-          if (!queue.connection) await queue.connect(interaction.member.voice.channel);
-      } catch {
-          queue.destroy();
-          return await interaction.reply({ content: "Could not join your voice channel!", ephemeral: true });
-      }
-
-      await interaction.deferReply();
-      const track = await player.search(query, {
-          requestedBy: interaction.user
-      }).then(x => x.tracks[0]);
-
-      // Throw an embeded message if the track is not found.
-      if (!track) return await interaction.followUp(
-          { 
-              content: `❌ | Track **${query}** not found!` 
-          });
-
-      queue.play(track);
-
-      // Get the youtube Thumbnail. 
-      const plyinfo = queue.nowPlaying();
-      //console.log(thumbart.thumbnail)
-
-      // Embeded message and Style.
-      const plyrembed = {
-
-        type: "rich",
-        title: `**${track.title}**!` ,
-        url: `${plyinfo.url}`,
-        description: ``,
-        color: `0x761f8d`,
-        image: {url: `${plyinfo.thumbnail}`},
-        author: {
-          name: `DJ-10-GU`,
-          icon_url: `https://i.imgur.com/XBilipH.gif`
-        },
-        footer: {
-          text: `Duration : ${plyinfo.duration}`
+        //Add track to the stream
+        const trackURL = interaction.options.get("track").value;
+        
+        try{
+            stream.push(await play.stream(trackURL));
         }
-    };
+        catch(err){
+            console.log(stream);
+            return interaction.reply({ content: "Please enter a valid YouTube URL", ephemeral: true });
+        }       
+                
+        //If only the track just added is present in the queue play the track
+        if(stream.length < 2){
+            let resource = createAudioResource(stream[0].stream, {
+                inputType : stream.type
+            })
+
+            player.play(resource);
+
+            connection.subscribe(player);
+
+        }
+
+        const author = interaction.member.user;
+        const trackInfo = await play.video_basic_info(trackURL)
+
+        return interaction.reply({ content: `${author.username} added "${trackInfo.video_details.title}" to the queue` })
+        
+
+        // Embeded message and Style.
+        // const plyrembed = {
+
+        //     type: "rich",
+        //     title: `**${track.title}**!` ,
+        //     url: `${plyinfo.url}`,
+        //     description: ``,
+        //     color: `0x761f8d`,
+        //     image: {url: `${plyinfo.thumbnail}`},
+        //     author: {
+        //     name: `DJ-10-GU`,
+        //     icon_url: `https://i.imgur.com/XBilipH.gif`
+        //     },
+        //     footer: {
+        //     text: `Duration : ${plyinfo.duration}`
+        //     }
+        // };
 
       // Add Buttons to the bottom of the embed message from the player.
       // const plyrbuttons = {
@@ -121,7 +113,17 @@ module.exports = {
 
 
       // Embeded message from player.
-      await interaction.followUp({ content: 'Loading...', ephemeral: true, embeds: [plyrembed] });
+      //await interaction.followUp({ content: 'Loading...', ephemeral: true, embeds: [plyrembed] });
 
-    }
-  }
+
+
+     }
+}        
+        
+	
+        
+       
+
+
+
+
