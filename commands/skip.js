@@ -17,7 +17,8 @@ module.exports = {
             //If no tracks remain in the queue diconnect the bot from the voice channel
             if(stream.length === 0){
                 const connection = getVoiceConnection(guildId);
-                connection.destroy();    
+                connection.destroy();  
+                return interaction.reply({ content: `${author.username} skipped the track`});  
             }
 
         } catch(err) {
