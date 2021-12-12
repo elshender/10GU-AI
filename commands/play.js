@@ -29,7 +29,6 @@ module.exports = {
             stream.push(await play.stream(trackURL));
         }
         catch(err){
-            console.log(stream);
             return interaction.reply({ content: "Please enter a valid YouTube URL", ephemeral: true });
         }       
                 

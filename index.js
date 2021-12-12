@@ -54,7 +54,6 @@ player.on(AudioPlayerStatus.Idle, () => {
     if(stream.length === 0){
         const connection = getVoiceConnection(guildId);
         connection.destroy();
-        console.log(getVoiceConnection(guildId));
         return;
     }
 
