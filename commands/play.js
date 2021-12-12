@@ -14,13 +14,9 @@ module.exports = {
         }
     ],
     async execute(interaction, client, player, stream){
-
-        //Connect the bot to the voice channel
-        const connection = joinVoiceChannel({
-            channelId : interaction.member.voice.channel.id,
-            guildId : guildId,
-            adapterCreator: interaction.guild.voiceAdapterCreator
-        })
+        if (!interaction.member.voice.channelId) return interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
+        if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) 
+        return interaction.reply({ content: "You are not in my voice channel!",  ephemeral: true });
 
         //Add track to the stream
         const trackURL = interaction.options.get("track").value;
@@ -30,7 +26,14 @@ module.exports = {
         }
         catch(err){
             return interaction.reply({ content: "Please enter a valid YouTube URL", ephemeral: true });
-        }       
+        }   
+    
+        //Connect the bot to the voice channel
+        const connection = joinVoiceChannel({
+                    channelId : interaction.member.voice.channel.id,
+                    guildId : guildId,
+                    adapterCreator: interaction.guild.voiceAdapterCreator
+                })
                 
         //If only the track just added is present in the queue play the track
         if(stream.length < 2){
