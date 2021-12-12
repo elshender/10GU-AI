@@ -114,7 +114,7 @@ module.exports = {
 
       // Embeded message from player.
       //await interaction.followUp({ content: 'Loading...', ephemeral: true, embeds: [plyrembed] });
-
+      // detect if connected to voice channel before destroying connection;
 
 
      }

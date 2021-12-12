@@ -48,9 +48,13 @@ player.on(AudioPlayerStatus.Idle, () => {
     console.log("gone idle")
     stream.shift();
 
+    //Prevents a crash where an idle state is detected after a bot has already disconnected from the voice channel
+    if(!getVoiceConnection(guildId)){ console.log("Dodged idle error"); return; };
+
     if(stream.length === 0){
         const connection = getVoiceConnection(guildId);
         connection.destroy();
+        console.log(getVoiceConnection(guildId));
         return;
     }
 
