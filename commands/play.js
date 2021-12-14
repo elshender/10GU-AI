@@ -20,13 +20,17 @@ module.exports = {
 
         //Add track to the stream
         const trackURL = interaction.options.get("track").value;
+
+        //Prevents interaction error when code takes over 3 secs to execute before the interaction reply
+        //Replys now "editReply", which is required for this
+        await interaction.deferReply();
         
         try{
             stream.push(await play.stream(trackURL));
         }
         catch(err){
-            return interaction.reply({ content: "Please enter a valid YouTube URL", ephemeral: true });
-        }   
+            return interaction.editReply({ content: "Please enter a valid YouTube URL", ephemeral: true });
+        } 
     
         //Connect the bot to the voice channel
         const connection = joinVoiceChannel({
@@ -50,7 +54,7 @@ module.exports = {
         const author = interaction.member.user;
         const trackInfo = await play.video_basic_info(trackURL)
 
-        return interaction.reply({ content: `${author.username} added "${trackInfo.video_details.title}" to the queue` })
+        return interaction.editReply({ content: `${author.username} added "${trackInfo.video_details.title}" to the queue` })
         
 
         // Embeded message and Style.
