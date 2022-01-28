@@ -19,9 +19,9 @@ module.exports = {
         }
     ],
     async execute(interaction, client, player, stream){
-        //if (!interaction.member.voice.channelId) return interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
-        //if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) 
-        //return interaction.reply({ content: "You are not in my voice channel!",  ephemeral: true });
+        if (!interaction.member.voice.channelId) return interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
+        if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) 
+        return interaction.reply({ content: "You are not in my voice channel!",  ephemeral: true });
 
 
         //Prevents interaction error when code takes over 3 secs to execute before the interaction reply
@@ -144,13 +144,7 @@ module.exports = {
       //     }
       //   ]
       // };
-
-
-      // Embeded message from player.
-      //await interaction.followUp({ content: 'Loading...', ephemeral: true, embeds: [plyrembed] });
-      // detect if connected to voice channel before destroying connection;
-
-
+      
      }
 }        
         
