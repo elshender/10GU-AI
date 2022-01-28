@@ -1,6 +1,11 @@
 const { createAudioResource, joinVoiceChannel } = require('@discordjs/voice');
 const { guildId } = require('../config.json');
 const play = require('play-dl');
+const YouTubeSr = require("youtube-sr").default;
+//Check if URL is valid
+const { yt_validate } = require('play-dl');
+let botReply;
+
 
 module.exports = {
     name: 'play',
@@ -14,23 +19,39 @@ module.exports = {
         }
     ],
     async execute(interaction, client, player, stream){
-        if (!interaction.member.voice.channelId) return interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
-        if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) 
-        return interaction.reply({ content: "You are not in my voice channel!",  ephemeral: true });
+        //if (!interaction.member.voice.channelId) return interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
+        //if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) 
+        //return interaction.reply({ content: "You are not in my voice channel!",  ephemeral: true });
 
-        //Add track to the stream
-        const trackURL = interaction.options.get("track").value;
 
         //Prevents interaction error when code takes over 3 secs to execute before the interaction reply
         //Replys now "editReply", which is required for this
         await interaction.deferReply();
-        
-        try{
-            stream.push(await play.stream(trackURL));
-        }
-        catch(err){
-            return interaction.editReply({ content: "Please enter a valid YouTube URL", ephemeral: true });
+
+        const author = interaction.member.user;
+
+        const trackURL = interaction.options.get("track").value;
+   
+
+        if(trackURL.match(/^.*(youtu.be\/|list=)([^#\&\?]*).*/)){
+            let tracklist = await YouTubeSr.getPlaylist(trackURL);
+            for (x in tracklist.videos){
+                let playlistTrackURl = `https://www.youtube.com/watch?v=${tracklist.videos[x].id}`
+                if (yt_validate(playlistTrackURl) !== 'video') {continue;}
+                stream.push(playlistTrackURl); 
+            }
+            botReply = `${author.username} added "${tracklist.title}" playlist to the queue`;
         } 
+        else {
+                if (yt_validate(trackURL) !== 'video') {return interaction.editReply({ content: "Please enter a valid YouTube URL", ephemeral: true });}
+                stream.push(trackURL);
+                const trackInfo = await play.video_basic_info(trackURL)
+                botReply = `${author.username} added "${trackInfo.video_details.title}" to the queue`;
+        }
+        
+
+
+        
     
         //Connect the bot to the voice channel
         const connection = joinVoiceChannel({
@@ -39,22 +60,29 @@ module.exports = {
                     adapterCreator: interaction.guild.voiceAdapterCreator
                 })
                 
-        //If only the track just added is present in the queue play the track
-        if(stream.length < 2){
-            let resource = createAudioResource(stream[0].stream, {
+        //If the bot is not currently playing, play the track
+        if(!botPlayingFlag){
+            
+            let trackToPlay = await play.stream(stream[0])
+            
+
+            let resource = createAudioResource(trackToPlay.stream, {
                 inputType : stream.type
             })
 
             player.play(resource);
 
+            botPlayingFlag = true;
+
             connection.subscribe(player);
 
         }
 
-        const author = interaction.member.user;
-        const trackInfo = await play.video_basic_info(trackURL)
+        
+        
+        
 
-        return interaction.editReply({ content: `${author.username} added "${trackInfo.video_details.title}" to the queue` })
+         return interaction.editReply({ content: botReply})
         
 
         // Embeded message and Style.

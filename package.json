@@ -23,7 +23,8 @@
     "discord.js": "^13.1.0",
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^4.4.0",
-    "play-dl": "^1.5.0"
+    "play-dl": "^1.5.0",
+    "youtube-sr": "^4.1.11"
   },
   "keywords": []
 }

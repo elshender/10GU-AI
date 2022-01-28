@@ -1,11 +1,12 @@
 const { createAudioResource, getVoiceConnection } = require('@discordjs/voice');
 const { guildId } = require('../config.json');
+const play = require('play-dl');
 
 
 module.exports = {
     name: 'skip',
     description: "An example command",
-    execute(interaction, discordClient, player, stream){
+    async execute(interaction, discordClient, player, stream){
         if (!interaction.member.voice.channelId) return interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
         if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) 
         return interaction.reply({ content: "You are not in my voice channel!",  ephemeral: true });
@@ -29,7 +30,8 @@ module.exports = {
         }
         
         //Play the track which is now at the front of the queue
-        let resource = createAudioResource(stream[0].stream, {
+        let trackToPlay = await play.stream(stream[0])
+        let resource = createAudioResource(trackToPlay.stream, {
             inputType : stream.type
         })
 

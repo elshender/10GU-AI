@@ -12,7 +12,8 @@ let player = createAudioPlayer({
 });
 let stream = [];
 let commandList = new Map();
-
+//Used to check whether the bot is playing or not
+global.botPlayingFlag = false;
 //List of files in the commands directory 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -44,24 +45,26 @@ discordClient.on('interactionCreate', async interaction => {
 //detects when the player becomes idle
 //if there are songs in the queue the next song is played
 //if not the bot is disconnected from the voice channel
-player.on(AudioPlayerStatus.Idle, () => {
-    console.log("gone idle")
+player.on(AudioPlayerStatus.Idle, async () => {
     stream.shift();
-
     //Prevents a crash where an idle state is detected after a bot has already disconnected from the voice channel
     if(!getVoiceConnection(guildId)){ console.log("Dodged idle error"); return; };
-
+    
     if(stream.length === 0){
+        botPlayingFlag = false;
         const connection = getVoiceConnection(guildId);
         connection.destroy();
         return;
     }
+  
+    let trackToPlay = await play.stream(stream[0])
 
-    let resource = createAudioResource(stream[0].stream, {
+    let resource = createAudioResource(trackToPlay.stream, {
         inputType : stream.type
     });
 
     player.play(resource);
+   
 })
 
 discordClient.login(token);
