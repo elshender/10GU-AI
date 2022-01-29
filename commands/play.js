@@ -63,7 +63,7 @@ module.exports = {
             let resource = createAudioResource(trackToPlay.stream, {
                 inputType : stream.type
             })
-
+        
             player.play(resource);
 
             botPlayingFlag = true;

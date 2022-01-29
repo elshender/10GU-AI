@@ -13,6 +13,7 @@ module.exports = {
 
         const author = interaction.member.user;
 
+        await interaction.deferReply();
         //Remove the current track from the queue
         stream.shift();
         
@@ -22,11 +23,11 @@ module.exports = {
             if(stream.length === 0){
                 const connection = getVoiceConnection(guildId);
                 connection.destroy();  
-                return interaction.reply({ content: `${author.username} skipped the track`});  
+                return interaction.editReply({ content: `${author.username} skipped the track`});  
             }
 
         } catch(err) {
-            return interaction.reply({ content: "Could not skip, ensure something is playing", ephemeral: true });
+            return interaction.editReply({ content: "Could not skip, ensure something is playing", ephemeral: true });
         }
         
         //Play the track which is now at the front of the queue
@@ -37,7 +38,7 @@ module.exports = {
 
         player.play(resource);
 
-        return interaction.reply({ content: `${author.username} skipped the track`});
+        return interaction.editReply({ content: `${author.username} skipped the track`});
 
     }
 }
