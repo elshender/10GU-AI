@@ -2,8 +2,6 @@ const { createAudioResource, joinVoiceChannel } = require('@discordjs/voice');
 const { guildId } = require('../config.json');
 const play = require('play-dl');
 const YouTubeSr = require("youtube-sr").default;
-//Check if URL is valid
-const { yt_validate } = require('play-dl');
 let botReply;
 
 
@@ -37,21 +35,17 @@ module.exports = {
             let tracklist = await YouTubeSr.getPlaylist(trackURL);
             for (x in tracklist.videos){
                 let playlistTrackURl = `https://www.youtube.com/watch?v=${tracklist.videos[x].id}`
-                if (yt_validate(playlistTrackURl) !== 'video') {continue;}
+                if (play.yt_validate(playlistTrackURl) !== 'video') {continue;}
                 stream.push(playlistTrackURl); 
             }
             botReply = `${author.username} added "${tracklist.title}" playlist to the queue`;
-        } 
-        else {
-                if (yt_validate(trackURL) !== 'video') {return interaction.editReply({ content: "Please enter a valid YouTube URL", ephemeral: true });}
+        } else if (play.yt_validate(trackURL) === 'video') {
                 stream.push(trackURL);
                 const trackInfo = await play.video_basic_info(trackURL)
                 botReply = `${author.username} added "${trackInfo.video_details.title}" to the queue`;
+        } else {
+            return interaction.editReply({ content: "Please enter a valid YouTube URL", ephemeral: true });
         }
-        
-
-
-        
     
         //Connect the bot to the voice channel
         const connection = joinVoiceChannel({
@@ -78,12 +72,9 @@ module.exports = {
 
         }
 
-        
-        
-        
-
          return interaction.editReply({ content: botReply})
-        
+    }
+}  
 
         // Embeded message and Style.
         // const plyrembed = {
@@ -145,8 +136,7 @@ module.exports = {
       //   ]
       // };
       
-     }
-}        
+       
         
 	
         
