@@ -10,10 +10,10 @@ let player = createAudioPlayer({
         noSubscriber: NoSubscriberBehavior.Play
     }
 });
-let stream = [];
+//Wont allow clearing of the stream unless this is set to global
+global.stream = [];
+global.previousStream = [];
 let commandList = new Map();
-//Used to check whether the bot is playing or not
-global.botPlayingFlag = false;
 //List of files in the commands directory 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -39,24 +39,32 @@ for(file of commandFiles){
 discordClient.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
   const calledCommand = commandList.get(interaction.commandName);
-  calledCommand.execute(interaction, discordClient, player, stream);
+  calledCommand.execute(interaction, discordClient, player);
 });
 
 //detects when the player becomes idle
 //if there are songs in the queue the next song is played
 //if not the bot is disconnected from the voice channel
 player.on(AudioPlayerStatus.Idle, async () => {
-    stream.shift();
+
     //Prevents a crash where an idle state is detected after a bot has already disconnected from the voice channel
     if(!getVoiceConnection(guildId)){ console.log("Dodged idle error"); return; };
+    if(typeof botDisconnectTimer !== "undefined"){return;};
+    
+    previousStream.unshift(stream.shift());
     
     if(stream.length === 0){
-        botPlayingFlag = false;
-        const connection = getVoiceConnection(guildId);
-        connection.destroy();
+        global.botDisconnectTimer = setTimeout(() => {
+            const connection = getVoiceConnection(guildId);
+            //check if the bot is connected to a voice channel
+            if(typeof connection === "undefined"){return;}
+            connection.destroy();
+            //Allows detection for if a timeout exists
+            botDisconnectTimer = undefined; 
+        }, 120000)
         return;
     }
-  
+    
     let trackToPlay = await play.stream(stream[0])
 
     let resource = createAudioResource(trackToPlay.stream, {

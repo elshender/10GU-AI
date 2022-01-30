@@ -7,7 +7,7 @@ let botReply;
 
 module.exports = {
     name: 'play',
-    description: "An example command",
+    description: "Add a track to the queue",
     options: [
         {
             name: "track",
@@ -16,22 +16,23 @@ module.exports = {
             required: true
         }
     ],
-    async execute(interaction, client, player, stream){
+    async execute(interaction, client, player){
         if (!interaction.member.voice.channelId) return interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
         if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) 
         return interaction.reply({ content: "You are not in my voice channel!",  ephemeral: true });
-
 
         //Prevents interaction error when code takes over 3 secs to execute before the interaction reply
         //Replys now "editReply", which is required for this
         await interaction.deferReply();
 
         const author = interaction.member.user;
-
+        const playerStatus = await player._state.status;
         const trackURL = interaction.options.get("track").value;
    
-
-        if(trackURL.match(/^.*(youtu.be\/|list=)([^#\&\?]*).*/)){
+        // First if matches a playlist and adds all playlist urls to the queue
+        // Second if matches a single track and adds it to the queue
+        // if neither of these match return
+        if(play.yt_validate(trackURL) === "playlist"){
             let tracklist = await YouTubeSr.getPlaylist(trackURL);
             for (x in tracklist.videos){
                 let playlistTrackURl = `https://www.youtube.com/watch?v=${tracklist.videos[x].id}`
@@ -39,13 +40,21 @@ module.exports = {
                 stream.push(playlistTrackURl); 
             }
             botReply = `${author.username} added "${tracklist.title}" playlist to the queue`;
-        } else if (play.yt_validate(trackURL) === 'video') {
+        } else if (play.yt_validate(trackURL) === "video") {
                 stream.push(trackURL);
                 const trackInfo = await play.video_basic_info(trackURL)
                 botReply = `${author.username} added "${trackInfo.video_details.title}" to the queue`;
         } else {
             return interaction.editReply({ content: "Please enter a valid YouTube URL", ephemeral: true });
         }
+
+        //If a the bot disconnect timer has been intialised interupt it 
+        if(typeof botDisconnectTimer !== "undefined"){;
+            clearTimeout(botDisconnectTimer);
+            botDisconnectTimer = undefined;
+        }
+
+        if(playerStatus === "paused"){player.unpause();}
     
         //Connect the bot to the voice channel
         const connection = joinVoiceChannel({
@@ -53,20 +62,18 @@ module.exports = {
                     guildId : guildId,
                     adapterCreator: interaction.guild.voiceAdapterCreator
                 })
-                
+            
         //If the bot is not currently playing, play the track
-        if(!botPlayingFlag){
+        if(playerStatus === "idle"){
             
             let trackToPlay = await play.stream(stream[0])
             
-
             let resource = createAudioResource(trackToPlay.stream, {
                 inputType : stream.type
             })
         
             player.play(resource);
 
-            botPlayingFlag = true;
 
             connection.subscribe(player);
 
