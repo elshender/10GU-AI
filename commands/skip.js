@@ -26,6 +26,7 @@ module.exports = {
             player.stop();
             global.botDisconnectTimer = setTimeout(() => {
                 const connection = getVoiceConnection(guildId);
+                previousStream = [];
                 connection.destroy();
                 //Allows detection for if a timeout exists
                 botDisconnectTimer = undefined; 

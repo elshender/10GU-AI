@@ -24,7 +24,7 @@ module.exports = {
         //Prevents interaction error when code takes over 3 secs to execute before the interaction reply
         //Replys now "editReply", which is required for this
         await interaction.deferReply();
-
+        
         const author = interaction.member.user;
         const playerStatus = await player._state.status;
         const trackURL = interaction.options.get("track").value;

@@ -11,6 +11,7 @@ let player = createAudioPlayer({
     }
 });
 //Wont allow clearing of the stream unless this is set to global
+//RENAMING THIS WILL INDUCE A NUCLEAR WINTER
 global.stream = [];
 global.previousStream = [];
 let commandList = new Map();
@@ -48,16 +49,14 @@ discordClient.on('interactionCreate', async interaction => {
 player.on(AudioPlayerStatus.Idle, async () => {
 
     //Prevents a crash where an idle state is detected after a bot has already disconnected from the voice channel
-    if(!getVoiceConnection(guildId)){ console.log("Dodged idle error"); return; };
-    if(typeof botDisconnectTimer !== "undefined"){return;};
+    if(!getVoiceConnection(guildId) || typeof botDisconnectTimer !== "undefined") {return;}
     
     previousStream.unshift(stream.shift());
-    
+
     if(stream.length === 0){
         global.botDisconnectTimer = setTimeout(() => {
             const connection = getVoiceConnection(guildId);
-            //check if the bot is connected to a voice channel
-            if(typeof connection === "undefined"){return;}
+            previousStream = [];
             connection.destroy();
             //Allows detection for if a timeout exists
             botDisconnectTimer = undefined; 
