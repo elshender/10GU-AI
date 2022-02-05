@@ -11,7 +11,6 @@ let player = createAudioPlayer({
     }
 });
 //Wont allow clearing of the stream unless this is set to global
-//RENAMING THIS WILL INDUCE A NUCLEAR WINTER
 global.stream = [];
 global.previousStream = [];
 let commandList = new Map();
@@ -58,7 +57,7 @@ player.on(AudioPlayerStatus.Idle, async () => {
             const connection = getVoiceConnection(guildId);
             previousStream = [];
             connection.destroy();
-            //Allows detection for if a timeout exists
+            //Clear variable so that it shows no disconnect timer is active
             botDisconnectTimer = undefined; 
         }, 120000)
         return;
@@ -76,6 +75,3 @@ player.on(AudioPlayerStatus.Idle, async () => {
 
 discordClient.login(token);
 
-
-	//if(!message.member.voice?.channel) return message.channel.send('Connect to a Voice Channel')
-    // on dc destroy queue

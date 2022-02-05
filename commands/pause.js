@@ -16,12 +16,14 @@ module.exports = {
         const author = interaction.member.user;
         const playerStatus = await player._state.status
         
+         //If bot is not connected to the voice channel or a bot disconnect timer has been intiated (hence nothing is playing) return
         if(!getVoiceConnection(guildId) || typeof botDisconnectTimer !== "undefined"){return interaction.editReply({ content: "Could not pause, ensure something is playing", ephemeral: true });}
+        
         if(playerStatus === "paused"){
             player.unpause();
             return interaction.editReply({ content: `${author.username} unpaused the track`});
         }
-        //If no tracks remain in the queue diconnect the bot from the voice channel
+        
         player.pause();
         
         return interaction.editReply({ content: `${author.username} paused the track`});

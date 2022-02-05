@@ -15,6 +15,7 @@ module.exports = {
         const author = interaction.member.user;
         const playerStatus = await player._state.status
         
+        //If bot is not connected or there are no previous tracks return
         if(!getVoiceConnection(guildId) || previousStream.length === 0){return interaction.editReply({ content: "There are no previous tracks queued", ephemeral: true });}
         
         //If a the bot disconnect timer has been intialised interupt it 
