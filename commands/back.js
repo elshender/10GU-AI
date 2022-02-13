@@ -28,7 +28,7 @@ module.exports = {
 
         let trackToPlay = await play.stream(stream[0])
         let resource = createAudioResource(trackToPlay.stream, {
-            inputType : stream.type
+            inputType : trackToPlay.type
         })
 
         player.play(resource);

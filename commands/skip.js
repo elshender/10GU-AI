@@ -39,7 +39,7 @@ module.exports = {
         //Play the track which is now at the front of the queue
         let trackToPlay = await play.stream(stream[0])
         let resource = createAudioResource(trackToPlay.stream, {
-            inputType : stream.type
+            inputType : trackToPlay.type
         })
 
         player.play(resource);
