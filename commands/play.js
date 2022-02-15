@@ -33,7 +33,11 @@ module.exports = {
         // Second if matches a single track and adds it to the queue
         // if neither of these match return
         if(play.yt_validate(trackURL) === "playlist"){
-            let tracklist = await YouTubeSr.getPlaylist(trackURL);
+            try{
+                let tracklist = await YouTubeSr.getPlaylist(trackURL);
+            } catch {
+                {return interaction.editReply({ content: "Playlist incompatible", ephemeral: true }); }
+            }
             for (x in tracklist.videos){
                 let playlistTrackURl = `https://www.youtube.com/watch?v=${tracklist.videos[x].id}`
                 if (play.yt_validate(playlistTrackURl) !== 'video') {continue;}
