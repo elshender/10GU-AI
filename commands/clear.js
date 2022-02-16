@@ -1,6 +1,7 @@
 const { createAudioResource, getVoiceConnection } = require('@discordjs/voice');
 const { guildId } = require('../config.json');
 const play = require('play-dl');
+const {disconnectBot} = require('../lib');
 
 module.exports = {
     name: 'clear',
@@ -20,12 +21,7 @@ module.exports = {
 
         stream = [];
 
-        global.botDisconnectTimer = setTimeout(() => {
-            const connection = getVoiceConnection(guildId);
-            connection.destroy();
-            //Clear variable so that it shows no disconnect timer is active
-            botDisconnectTimer = undefined; 
-        }, 120000) 
+        disconnectBot();
 
         return interaction.editReply({ content: `${author.username} cleared the queue`}) 
     }

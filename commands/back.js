@@ -1,6 +1,7 @@
 const { createAudioResource, getVoiceConnection } = require('@discordjs/voice');
 const { guildId } = require('../config.json');
 const play = require('play-dl');
+const {playRecur, disconnectInterupt} = require('../lib');
 
 module.exports = {
     name: 'back',
@@ -20,18 +21,12 @@ module.exports = {
         
         //If a the bot disconnect timer has been intialised interupt it 
         if(typeof botDisconnectTimer !== "undefined"){;
-            clearTimeout(botDisconnectTimer);
-            botDisconnectTimer = undefined;
+            disconnectInterupt();
         }
     
         stream.unshift(previousStream.shift())
 
-        let trackToPlay = await play.stream(stream[0])
-        let resource = createAudioResource(trackToPlay.stream, {
-            inputType : trackToPlay.type
-        })
-
-        player.play(resource);
+        playRecur(player);
         
         if(playerStatus === "paused"){player.unpause();}
         

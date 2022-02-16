@@ -5,6 +5,7 @@ const discordClient = new Client({intents: [Intents.FLAGS.GUILD_VOICE_STATES, In
 const { createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus, getVoiceConnection } = require('@discordjs/voice');
 const play = require('play-dl');
 const ffmpeg = require('ffmpeg');
+const {playRecur, disconnectInterupt, disconnectBot} = require("./lib")
 let player = createAudioPlayer({
     behaviors: {
         noSubscriber: NoSubscriberBehavior.Play
@@ -53,23 +54,11 @@ player.on(AudioPlayerStatus.Idle, async () => {
     previousStream.unshift(stream.shift());
 
     if(stream.length === 0){
-        global.botDisconnectTimer = setTimeout(() => {
-            const connection = getVoiceConnection(guildId);
-            previousStream = [];
-            connection.destroy();
-            //Clear variable so that it shows no disconnect timer is active
-            botDisconnectTimer = undefined; 
-        }, 120000)
+        disconnectBot();
         return;
     }
     
-    let trackToPlay = await play.stream(stream[0])
-
-    let resource = createAudioResource(trackToPlay.stream, {
-        inputType : trackToPlay.type
-    });
-
-    player.play(resource);
+    playRecur(player);
    
 })
 

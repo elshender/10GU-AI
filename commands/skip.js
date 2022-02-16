@@ -1,6 +1,7 @@
 const { createAudioResource, getVoiceConnection } = require('@discordjs/voice');
 const { guildId } = require('../config.json');
 const play = require('play-dl');
+const {playRecur, disconnectBot} = require('../lib');
 
 
 module.exports = {
@@ -25,24 +26,12 @@ module.exports = {
         //If no tracks remain in the queue initiate a bot disconnect timer
         if(stream.length === 0){ 
             player.stop();
-            global.botDisconnectTimer = setTimeout(() => {
-                const connection = getVoiceConnection(guildId);
-                previousStream = [];
-                connection.destroy();
-                //Clear variable so that it shows no disconnect timer is active
-                botDisconnectTimer = undefined; 
-                }, 120000) 
+            disconnectBot();
             return interaction.editReply({ content: `${author.username} skipped the track`}) 
         }
         
-        
         //Play the track which is now at the front of the queue
-        let trackToPlay = await play.stream(stream[0])
-        let resource = createAudioResource(trackToPlay.stream, {
-            inputType : trackToPlay.type
-        })
-
-        player.play(resource);
+        playRecur(player);
 
         if(playerStatus === "paused"){player.unpause();}
 
@@ -50,3 +39,5 @@ module.exports = {
 
     }
 }
+
+//test unpause 

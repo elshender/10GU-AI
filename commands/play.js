@@ -2,6 +2,7 @@ const { createAudioResource, joinVoiceChannel } = require('@discordjs/voice');
 const { guildId } = require('../config.json');
 const play = require('play-dl');
 const YouTubeSr = require("youtube-sr").default;
+const {playRecur, disconnectInterupt} = require("../lib")
 let botReply;
 
 
@@ -35,27 +36,26 @@ module.exports = {
         if(play.yt_validate(trackURL) === "playlist"){
             try{
                 let tracklist = await YouTubeSr.getPlaylist(trackURL);
+                for (x in tracklist.videos){
+                    let playlistTrackURl = `https://www.youtube.com/watch?v=${tracklist.videos[x].id}`
+                    if (play.yt_validate(playlistTrackURl) !== 'video') {continue;}
+                    stream.push(playlistTrackURl);
+                    botReply = `${author.username} added "${tracklist.title}" playlist to the queue`; 
+                }
             } catch {
                 {return interaction.editReply({ content: "Playlist incompatible", ephemeral: true }); }
             }
-            for (x in tracklist.videos){
-                let playlistTrackURl = `https://www.youtube.com/watch?v=${tracklist.videos[x].id}`
-                if (play.yt_validate(playlistTrackURl) !== 'video') {continue;}
-                stream.push(playlistTrackURl); 
-            }
-            botReply = `${author.username} added "${tracklist.title}" playlist to the queue`;
         } else if (play.yt_validate(trackURL) === "video") {
                 stream.push(trackURL);
-                const trackInfo = await play.video_basic_info(trackURL)
-                botReply = `${author.username} added "${trackInfo.video_details.title}" to the queue`;
+                const trackInfo = await YouTubeSr.getVideo(trackURL);
+                botReply = `${author.username} added "${trackInfo.title}" to the queue`;
         } else {
             return interaction.editReply({ content: "Please enter a valid YouTube URL", ephemeral: true });
         }
 
-        //If a the bot disconnect timer has been intialised interupt it 
+        
         if(typeof botDisconnectTimer !== "undefined"){;
-            clearTimeout(botDisconnectTimer);
-            botDisconnectTimer = undefined;
+            disconnectInterupt();
         }
 
         if(playerStatus === "paused"){player.unpause();}
@@ -70,15 +70,7 @@ module.exports = {
         //If the bot is not currently playing, play the track
         if(playerStatus === "idle"){
             
-            let trackToPlay = await play.stream(stream[0])
-            
-            let resource = createAudioResource(trackToPlay.stream, {
-                inputType : trackToPlay.type
-            })
-        
-            
-            player.play(resource);
-
+            playRecur(player);
 
             connection.subscribe(player);
 
