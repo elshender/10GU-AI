@@ -2,10 +2,10 @@ const { token, guildId, clientId } = require('./config.json');
 const fs = require('fs');
 const { Client, Intents } = require('discord.js');
 const discordClient = new Client({intents: [Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_PRESENCES]});
-const { createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus, getVoiceConnection } = require('@discordjs/voice');
+const { createAudioPlayer,  NoSubscriberBehavior, AudioPlayerStatus, getVoiceConnection } = require('@discordjs/voice');
 const play = require('play-dl');
 const ffmpeg = require('ffmpeg');
-const {playRecur, disconnectInterupt, disconnectBot} = require("./lib")
+const {playRecur, disconnectBot} = require("./lib")
 let player = createAudioPlayer({
     behaviors: {
         noSubscriber: NoSubscriberBehavior.Play

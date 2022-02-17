@@ -1,4 +1,4 @@
-const { createAudioResource, joinVoiceChannel } = require('@discordjs/voice');
+const { joinVoiceChannel } = require('@discordjs/voice');
 const { guildId } = require('../config.json');
 const play = require('play-dl');
 const YouTubeSr = require("youtube-sr").default;

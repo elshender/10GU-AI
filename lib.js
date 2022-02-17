@@ -1,5 +1,6 @@
 const play = require('play-dl');
-const { createAudioResource } = require('@discordjs/voice');
+const { createAudioResource, getVoiceConnection } = require('@discordjs/voice');
+const { guildId } = require('./config.json');
 
 module.exports = {
 
