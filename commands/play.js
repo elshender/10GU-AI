@@ -2,8 +2,8 @@ const { joinVoiceChannel } = require('@discordjs/voice');
 const { guildId } = require('../config.json');
 const play = require('play-dl');
 const YouTubeSr = require("youtube-sr").default;
-const {playRecur, disconnectInterupt} = require("../lib")
-let botReply;
+const { playRecur, disconnectInterupt } = require("../lib")
+
 
 
 module.exports = {
@@ -17,68 +17,71 @@ module.exports = {
             required: true
         }
     ],
-    async execute(interaction, client, player){
+    async execute(interaction, client, player) {
         if (!interaction.member.voice.channelId) return interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
-        if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) 
-        return interaction.reply({ content: "You are not in my voice channel!",  ephemeral: true });
+        if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId)
+            return interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
 
         //Prevents interaction error when code takes over 3 secs to execute before the interaction reply
         //Replys now "editReply", which is required for this
         await interaction.deferReply();
-        
+
         const author = interaction.member.user;
         const playerStatus = await player._state.status;
         const trackURL = interaction.options.get("track").value;
-   
-        // First if matches a playlist and adds all playlist urls to the queue
-        // Second if matches a single track and adds it to the queue
-        // if neither of these match return
-        if(play.yt_validate(trackURL) === "playlist"){
-            try{
-                let tracklist = await YouTubeSr.getPlaylist(trackURL);
-                for (x in tracklist.videos){
-                    let playlistTrackURl = `https://www.youtube.com/watch?v=${tracklist.videos[x].id}`
-                    if (play.yt_validate(playlistTrackURl) !== 'video') {continue;}
-                    stream.push(playlistTrackURl);
-                    botReply = `${author.username} added "${tracklist.title}" playlist to the queue`; 
-                }
-            } catch {
-                {return interaction.editReply({ content: "Playlist incompatible", ephemeral: true }); }
+        const validateURL = play.yt_validate(trackURL);
+
+        // First if detects a correct playlist or video URL
+        // Second if detects a playlist and adds all playlist urls to the queue
+        // Third if detects a single track and adds it to the queue
+        if (!(validateURL === "playlist" || validateURL === "video")) { return interaction.editReply({ content: "Please enter a valid YouTube URL" }); }
+
+        if (validateURL === "playlist") {
+            let trackList;
+            try {
+                trackList = await YouTubeSr.getPlaylist(trackURL);
             }
-        } else if (play.yt_validate(trackURL) === "video") {
-                stream.push(trackURL);
+            catch {
+                { return interaction.editReply({ content: "Playlist incompatible" }); }
+            }
+            for (x in trackList.videos) {
+                let playlistTrackURl = `https://www.youtube.com/watch?v=${trackList.videos[x].id}`
+                if (play.yt_validate(playlistTrackURl) !== 'video') { continue; }
+                stream.push(playlistTrackURl);
+                interaction.editReply({ content: `${author.username} added "${trackList.title}" playlist to the queue` });
+            }
+        }
+
+        if (validateURL === "video") {
+            stream.push(trackURL);
+            try {
                 const trackInfo = await YouTubeSr.getVideo(trackURL);
-                botReply = `${author.username} added "${trackInfo.title}" to the queue`;
-        } else {
-            return interaction.editReply({ content: "Please enter a valid YouTube URL", ephemeral: true });
+                interaction.editReply({ content: `${author.username} added "${trackInfo.title}" to the queue` });
+            }
+            catch {
+                interaction.editReply({ content: `${author.username} added "Undefined Name" to the queue` });
+            }
         }
 
-        
-        if(typeof botDisconnectTimer !== "undefined"){;
-            disconnectInterupt();
-        }
+        if (typeof botDisconnectTimer !== "undefined") { disconnectInterupt(); }
 
-        if(playerStatus === "paused"){player.unpause();}
-    
+        if (playerStatus === "paused") { player.unpause(); }
+
         //Connect the bot to the voice channel
         const connection = joinVoiceChannel({
-                    channelId : interaction.member.voice.channel.id,
-                    guildId : guildId,
-                    adapterCreator: interaction.guild.voiceAdapterCreator
-                })
-            
-        //If the bot is not currently playing, play the track
-        if(playerStatus === "idle"){
-            
-            playRecur(player);
+            channelId: interaction.member.voice.channel.id,
+            guildId: guildId,
+            adapterCreator: interaction.guild.voiceAdapterCreator
+        })
 
+        //If the bot is not currently playing, play the track
+        if (playerStatus === "idle") {
+            playRecur(player);
             connection.subscribe(player);
 
         }
-
-         return interaction.editReply({ content: botReply})
     }
-}  
+}
 
         // Embeded message and Style.
         // const plyrembed = {
@@ -139,12 +142,12 @@ module.exports = {
       //     }
       //   ]
       // };
-      
-       
-        
-	
-        
-       
+
+
+
+
+
+
 
 
 
