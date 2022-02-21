@@ -69,3 +69,13 @@ node index.js
 
 ### Run it as a Docker container
 ....TODO....
+
+* Pull Docker image
+  * <LINK_TO_DOCKER_IMAGE_BUILD>
+* Environment variables
+  1. -e CLIENTID
+  2. -e GUILDID
+  3. -e TOKEN
+* Docker: Build steps
+  1.  docker build -t arb4l3st/10-gu:latest .
+* Never run with missing or empty config.json. example.config.json as example of minimal content of config.json.

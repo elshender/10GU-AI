@@ -1,5 +1,11 @@
 FROM node:16.10.0-bullseye-slim
 
+ENV CLIENTID=""
+
+ENV GUILDID=""
+
+ENV TOKEN=""
+
 ENV NODE_ENV=production
 
 WORKDIR /app

@@ -1,7 +1,8 @@
 const play = require('play-dl');
+require('dotenv').config();
 const { createAudioResource, getVoiceConnection } = require('@discordjs/voice');
-const { guildId } = require('./config.json');
-
+const conf = require('./config.json');
+const guildId = process.env.GUILDID || conf[`guildId`]
 module.exports = {
 
     //This needed to skip through tracks if they error and you have multiple in the queue - happens mostly with age restricted content

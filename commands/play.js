@@ -1,5 +1,7 @@
 const { joinVoiceChannel } = require('@discordjs/voice');
-const { guildId } = require('../config.json');
+require('dotenv').config();
+const conf = require('../config.json');
+const guildId = process.env.GUILDID || conf[`guildId`];
 const play = require('play-dl');
 const YouTubeSr = require("youtube-sr").default;
 const { playRecur, disconnectInterupt } = require("../lib")

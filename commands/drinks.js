@@ -1,5 +1,7 @@
 const { MessageEmbed } = require("discord.js");
-const { clientId } = require("../config.json")
+require('dotenv').config();
+const conf = require('../config.json');
+const clientId = process.env.CLIENTID || conf[`clientId`];
 
 module.exports = {
     name: 'drinks',

@@ -1,5 +1,10 @@
-const { token, guildId, clientId } = require('./config.json');
+require('dotenv').config(); 
+console.log(process.env.TOKEN);
 const fs = require('fs');
+const conf = require('./config.json');
+console.log(process.env.GUILDID);
+const token = process.env.TOKEN || conf[`token`];
+const guildId = process.env.GUILDID || conf[`guildId`];
 const { Client, Intents } = require('discord.js');
 const discordClient = new Client({ intents: [Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_PRESENCES] });
 const { createAudioPlayer, NoSubscriberBehavior, AudioPlayerStatus, getVoiceConnection } = require('@discordjs/voice');

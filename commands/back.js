@@ -1,5 +1,7 @@
 const { createAudioResource, getVoiceConnection } = require('@discordjs/voice');
-const { guildId } = require('../config.json');
+require('dotenv').config();
+const conf = require('../config.json');
+const guildId = process.env.GUILDID || conf[`guildId`];
 const play = require('play-dl');
 const { playRecur, disconnectInterupt } = require('../lib');
 
