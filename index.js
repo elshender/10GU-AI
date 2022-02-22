@@ -1,5 +1,5 @@
 require('dotenv').config(); 
-console.log(process.env.TOKEN);
+console.log("process.env.TOKEN");
 const fs = require('fs');
 const conf = require('./config.json');
 console.log(process.env.GUILDID);
