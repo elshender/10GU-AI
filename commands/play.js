@@ -41,8 +41,8 @@ module.exports = {
         if (validateURL === "playlist") {
             let trackList;
             try {
-                if(!trackList) throw "incompatible"; 
                 trackList = await YouTubeSr.getPlaylist(trackURL);
+                if (!trackList) throw "incompatible";
             }
             catch {
                 { return interaction.editReply({ content: "Playlist incompatible" }); }
