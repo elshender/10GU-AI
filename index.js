@@ -1,8 +1,12 @@
+console.log(`%c░░███╗░░░█████╗░░██████╗░██╗░░░██╗
+░████║░░██╔══██╗██╔════╝░██║░░░██║
+██╔██║░░██║░░██║██║░░██╗░██║░░░██║
+╚═╝██║░░██║░░██║██║░░╚██╗██║░░░██║
+███████╗╚█████╔╝╚██████╔╝╚██████╔╝
+╚══════╝░╚════╝░░╚═════╝░░╚═════╝░`, "font-family:monospace")
 require('dotenv').config(); 
-console.log("process.env.TOKEN");
 const fs = require('fs');
 const conf = require('./config.json');
-console.log(process.env.GUILDID);
 const token = process.env.TOKEN || conf[`token`];
 const guildId = process.env.GUILDID || conf[`guildId`];
 const { Client, Intents } = require('discord.js');
