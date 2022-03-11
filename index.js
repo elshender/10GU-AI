@@ -47,8 +47,9 @@ discordClient.on("ready", () => {
 
 //Listens for and executes the commands
 discordClient.on('interactionCreate', async interaction => {
-  if (!interaction.isCommand()) return;
-  const calledCommand = commandList.get(interaction.commandName);
+  if (!interaction.isCommand() && !interaction.isButton()) return;
+  const commandTitle = interaction.commandName || interaction.customId
+  const calledCommand = commandList.get(commandTitle);
   calledCommand.execute(interaction, discordClient, player);
 });
 
