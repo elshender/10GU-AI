@@ -11,15 +11,9 @@ let stream = [];
 module.exports = {
 
 //increase or decrease position in playlist.
-    increasePosition: () => {
-        streamPosition++
-        console.log(streamPosition)
-    },
+    increasePosition: () => { streamPosition++ },
 
-    decreasePosition: () => {
-        streamPosition--
-        console.log(streamPosition)
-    },
+    decreasePosition: () => { streamPosition-- },
 
     //functions for manipulating and getting information about the playlist
 
@@ -61,7 +55,7 @@ module.exports = {
                 module.exports.disconnectBot();
                 return;
             }
-            stream.shift();
+            module.exports.increasePosition();
             module.exports.playRecur(player, count);
         }
     },
