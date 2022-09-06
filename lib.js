@@ -10,7 +10,7 @@ let stream = [];
 
 module.exports = {
 
-//increase or decrease position in playlist
+//increase or decrease position in playlist.
     increasePosition: () => {
         streamPosition++
         console.log(streamPosition)
