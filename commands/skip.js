@@ -3,7 +3,7 @@ require('dotenv').config();
 const conf = require('../config.json');
 const guildId = process.env.GUILDID || conf[`guildId`];
 const play = require('play-dl');
-const { playRecur, disconnectBot } = require('../lib');
+const { playRecur, disconnectBot, increasePosition, showStreamPosition, showStream } = require('../lib');
 
 
 module.exports = {
@@ -23,10 +23,10 @@ module.exports = {
         if (!getVoiceConnection(guildId) || typeof botDisconnectTimer !== "undefined") { return interaction.editReply({ content: "Could not skip, ensure something is playing", ephemeral: true }); }
 
         //Remove the current track from the queue and adds to previous track queue
-        previousStream.unshift(stream.shift());
+        increasePosition();
 
         //If no tracks remain in the queue initiate a bot disconnect timer
-        if (stream.length === 0) {
+        if (showStreamPosition() >= showStream().length) {
             player.stop();
             disconnectBot();
             return interaction.editReply({ content: `${author.username} skipped the track` })
@@ -41,5 +41,3 @@ module.exports = {
 
     }
 }
-
-//test unpause 

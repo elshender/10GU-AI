@@ -14,16 +14,14 @@ const discordClient = new Client({ intents: [Intents.FLAGS.GUILD_VOICE_STATES, I
 const { createAudioPlayer, NoSubscriberBehavior, AudioPlayerStatus, getVoiceConnection } = require('@discordjs/voice');
 const play = require('play-dl');
 const ffmpeg = require('ffmpeg');
-const { playRecur, disconnectBot } = require("./lib")
+const { playRecur, disconnectBot, increasePosition, showStream, showStreamPosition } = require("./lib")
 let player = createAudioPlayer({
   behaviors: {
     noSubscriber: NoSubscriberBehavior.Play
   }
 });
-//Wont allow clearing of the stream unless this is set to global
-global.stream = [];
-global.previousStream = [];
 let commandList = new Map();
+
 //List of files in the commands directory 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -61,9 +59,9 @@ player.on(AudioPlayerStatus.Idle, async () => {
   //Prevents a crash where an idle state is detected after a bot has already disconnected from the voice channel
   if (!getVoiceConnection(guildId) || typeof botDisconnectTimer !== "undefined") { return; }
 
-  previousStream.unshift(stream.shift());
+  increasePosition();
 
-  if (stream.length === 0) {
+  if (showStreamPosition() >= showStream().length) {
     disconnectBot();
     return;
   }
@@ -73,4 +71,5 @@ player.on(AudioPlayerStatus.Idle, async () => {
 })
 
 discordClient.login(token);
+
 

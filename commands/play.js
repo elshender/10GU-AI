@@ -4,7 +4,7 @@ const conf = require('../config.json');
 const guildId = process.env.GUILDID || conf[`guildId`];
 const play = require('play-dl');
 const YouTubeSr = require("youtube-sr").default;
-const { playRecur, disconnectInterupt } = require("../lib")
+const { playRecur, disconnectInterupt, addToStream, PlaylistEntry } = require("../lib")
 
 
 
@@ -33,6 +33,7 @@ module.exports = {
         const trackURL = interaction.options.get("track").value;
         const validateURL = play.yt_validate(trackURL);
 
+
         // First if detects a correct playlist or video URL
         // Second if detects a playlist and adds all playlist urls to the queue
         // Third if detects a single track and adds it to the queue
@@ -48,22 +49,23 @@ module.exports = {
                 { return interaction.editReply({ content: "Playlist incompatible" }); }
             }
             for (x in trackList.videos) {
-                let playlistTrackURl = `https://www.youtube.com/watch?v=${trackList.videos[x].id}`
-                if (play.yt_validate(playlistTrackURl) !== 'video') { continue; }
-                stream.push(playlistTrackURl);
+                const trackInfo = trackList.videos[x]
+                addToStream(new PlaylistEntry(trackInfo.title, trackInfo.durationFormatted, trackInfo.thumbnail.url, trackInfo.id));
                 interaction.editReply({ content: `${author.username} added "${trackList.title}" playlist to the queue` });
             }
+
         }
 
         if (validateURL === "video") {
-            stream.push(trackURL);
             try {
                 const trackInfo = await YouTubeSr.getVideo(trackURL);
+                addToStream(new PlaylistEntry(trackInfo.title, trackInfo.durationFormatted, trackInfo.thumbnail.url, trackInfo.id));
                 interaction.editReply({ content: `${author.username} added "${trackInfo.title}" to the queue` });
             }
             catch {
-                interaction.editReply({ content: `${author.username} added "Undefined Name" to the queue` });
+                interaction.editReply({ content: `Track incompatible` });
             }
+
         }
 
         if (typeof botDisconnectTimer !== "undefined") { disconnectInterupt(); }
@@ -145,10 +147,6 @@ module.exports = {
       //     }
       //   ]
       // };
-
-
-
-
 
 
 

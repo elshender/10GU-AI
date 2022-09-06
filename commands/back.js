@@ -3,7 +3,7 @@ require('dotenv').config();
 const conf = require('../config.json');
 const guildId = process.env.GUILDID || conf[`guildId`];
 const play = require('play-dl');
-const { playRecur, disconnectInterupt } = require('../lib');
+const { playRecur, disconnectInterupt, decreasePosition, showStreamPosition } = require('../lib');
 
 module.exports = {
     name: 'back',
@@ -19,15 +19,14 @@ module.exports = {
         const playerStatus = await player._state.status
 
         //If bot is not connected or there are no previous tracks return
-        if (!getVoiceConnection(guildId) || previousStream.length === 0) { return interaction.editReply({ content: "There are no previous tracks queued", ephemeral: true }); }
+        if (!getVoiceConnection(guildId) || showStreamPosition() === 0) { return interaction.editReply({ content: "There are no previous tracks queued", ephemeral: true }); }
 
         //If a the bot disconnect timer has been intialised interupt it 
         if (typeof botDisconnectTimer !== "undefined") {
-            ;
             disconnectInterupt();
         }
 
-        stream.unshift(previousStream.shift())
+        decreasePosition();
 
         playRecur(player);
 
